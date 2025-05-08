@@ -1,0 +1,297 @@
+//Movie-Ticket-Booking-System
+//This program simulates a movie ticket booking system in C. It provides user to choose theater, movie, date, show timings, ticket type, number of tickets, seat numbers, etc....after completion of this, the final movie ticket is going to print.
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_SEATS 100
+#define ROWS 10
+#define COLS 10
+
+int seats[ROWS][COLS]; // 0 = Available, 1 = Booked
+
+void initialiseSeats()
+{
+    for (int i = 0; i < ROWS; i++)
+        for (int j = 0; j < COLS; j++)
+            seats[i][j] = 0;
+}
+
+void displaySeats()
+{
+    printf("\nSeat Layout (O = Available, X = Booked):\n");
+    printf("--------------------------------------------------------\n");
+    for (int i = 0; i < ROWS; i++)
+    {
+        printf("Seats: ");
+        for (int j = 0; j < COLS; j++)
+        {
+            printf("%3d:%c  ", (i * COLS + j + 1), seats[i][j] == 0 ? 'O' : 'X');
+        }
+        printf("\n");
+    }
+    printf("--------------------------------------------------------\n");
+}
+
+int isSeatAvailable(int seatNumber)
+{
+    int row = (seatNumber - 1) / COLS;
+    int col = (seatNumber - 1) % COLS;
+    return seats[row][col] == 0;
+}
+
+void bookSeat(int seatNumber)
+{
+    int row = (seatNumber - 1) / COLS;
+    int col = (seatNumber - 1) % COLS;
+    seats[row][col] = 1;
+}
+
+int main()
+{
+    char movieType[20];
+    char movieName[50], movieTime[30], movieDate[20];
+    int movieTypeChoice, movieChoice, timeChoice, ticketChoice, theaterChoice;
+    int numberOfTickets, ticketPrice, totalCost;
+    char confirmation[5];
+    int selectedSeats[MAX_SEATS];
+    int seatCount = 0;
+
+    printf("----------------WELCOME TO MOVIE TICKET BOOKING SYSTEM----------------\n");
+
+    initialiseSeats();
+
+    // Select Theater
+    printf("\nSelect Theater:\n");
+    printf("1. Rain Square \n");
+    printf("2. M1 Cinemas\n");
+    printf("3.V Epiq Cinema \n");
+    printf("4. Archana Cinema \n");
+
+    printf("Enter your choice (1-4): ");
+    scanf("%d", &theaterChoice);
+
+    char theaterName[50], theaterLocation[100];
+    switch (theaterChoice)
+    {
+
+     case 1:
+        strcpy(theaterName, "Rain Square");
+        strcpy(theaterLocation, "Address: Ambedkar Nagar Dargamitta,Nellore");
+        break;
+    case 2:
+        strcpy(theaterName, "M1 Cinemas");
+        strcpy(theaterLocation, "Address: Nagulamitta Road Poga Thota ,Nellore");
+        break;
+    case 3:
+        strcpy(theaterName, "V Epiq Cinema");
+        strcpy(theaterLocation, "Address: Main Road, Sullurpet ");
+        break;
+    case 4:
+        strcpy(theaterName, "Archana Cinema ");
+        strcpy(theaterLocation, "Address:RR Street Santhapeta,Nellore");
+        break;
+    default:
+        printf("Invalid theater choice! Exiting...\n");
+        return 1;
+    }
+
+
+    printf("\nYou have selected: %s\n%s\n", theaterName, theaterLocation);
+
+    // Select Movie Type
+    printf("\nSelect Movie Type:\n");
+    printf("1. Bollywood\n");
+    printf("2. Tollywood\n");
+    printf("3. Hollywood\n");
+    printf("Enter your choice (1-3): ");
+    scanf("%d", &movieTypeChoice);
+
+    switch (movieTypeChoice)
+    {
+    case 1:
+        strcpy(movieType, "Bollywood");
+        printf("\nAvailable Bollywood Movies:\n");
+        printf("1. SANAM TERI KASAM\n2. RAAZI\n3. SHERSHAAH\n");
+        printf("Enter your choice (1-3): ");
+        scanf("%d", &movieChoice);
+        switch (movieChoice)
+        {
+        case 1: strcpy(movieName, "SANAM TERI KASAM"); break;
+        case 2: strcpy(movieName, "RAAZI"); break;
+        case 3: strcpy(movieName, "SHERSHAAH"); break;
+        default:
+            printf("Invalid choice! Exiting...\n");
+            return 1;
+        }
+        break;
+
+    case 2:
+        strcpy(movieType, "Tollywood");
+        printf("\nAvailable Tollywood Movies:\n");
+        printf("1. PUSHPAA\n2. SITA RAMAM\n3. SALAAR\n");
+        printf("Enter your choice (1-3): ");
+        scanf("%d", &movieChoice);
+        switch (movieChoice)
+        {
+        case 1: strcpy(movieName, "PUSHPAA"); break;
+        case 2: strcpy(movieName, "SITA RAMAM"); break;
+        case 3: strcpy(movieName, "SALAAR"); break;
+        default:
+            printf("Invalid choice! Exiting...\n");
+            return 1;
+        }
+        break;
+
+    case 3:
+        strcpy(movieType, "Hollywood");
+        printf("\nAvailable Hollywood Movies:\n");
+        printf("1. AVENGERS\n2. FAST & FURIOUS\n3. INCEPTION\n");
+        printf("Enter your choice (1-3): ");
+        scanf("%d", &movieChoice);
+        switch (movieChoice)
+        {
+        case 1: strcpy(movieName, "AVENGERS"); break;
+        case 2: strcpy(movieName, "FAST & FURIOUS"); break;
+        case 3: strcpy(movieName, "INCEPTION"); break;
+        default:
+            printf("Invalid choice! Exiting...\n");
+            return 1;
+        }
+        break;
+
+    default:
+        printf("Invalid movie type! Exiting...\n");
+        return 1;
+    }
+
+    // Date selection
+    printf("\nEnter the date of the show (DD/MM/YYYY): ");
+    scanf("%s", movieDate);
+
+    // Show timings
+    printf("\nAvailable show timings for %s:\n", movieName);
+    printf("1. First Show (10:00 AM)\n2. Matinee Show (1:30 PM)\n3. Evening Show (6:00 PM)\n");
+    printf("Enter your preferred show (1/2/3): ");
+    scanf("%d", &timeChoice);
+
+    switch (timeChoice)
+    {
+    case 1: strcpy(movieTime, "First Show (10:00 AM)"); break;
+    case 2: strcpy(movieTime, "Matinee Show (1:30 PM)"); break;
+    case 3: strcpy(movieTime, "Evening Show (6:00 PM)"); break;
+    default:
+        printf("Invalid time choice! Exiting...\n");
+        return 1;
+    }
+
+    // Ticket type
+    printf("\nSelect ticket type:\n1. Regular - ₹150\n2. VIP - ₹250\n3. Premium - ₹500\n");
+    printf("Enter your choice (1/2/3): ");
+    scanf("%d", &ticketChoice);
+
+    switch (ticketChoice)
+    {
+    case 1: ticketPrice = 150; break;
+    case 2: ticketPrice = 250; break;
+    case 3: ticketPrice = 500; break;
+    default:
+        printf("Invalid ticket type! Exiting...\n");
+        return 1;
+    }
+
+    // Number of tickets
+    printf("\nEnter the number of tickets (max 100): ");
+    scanf("%d", &numberOfTickets);
+
+    // Display seat layout
+    displaySeats();
+
+    // Seat selection
+    printf("\nSelect your seats (Enter seat number):\n");
+    for (int i = 0; i < numberOfTickets; i++)
+    {
+        int seatNumber;
+        printf("Enter seat %d (1-100): ", i + 1);
+        scanf("%d", &seatNumber);
+
+        if (isSeatAvailable(seatNumber))
+        {
+            bookSeat(seatNumber);
+            selectedSeats[seatCount++] = seatNumber;
+            printf("Seat %d booked.\n", seatNumber);
+        }
+        else
+        {
+            printf("Seat %d is already booked. Choose another seat.\n", seatNumber);
+            i--;
+        }
+    }
+
+    totalCost = numberOfTickets * ticketPrice;
+
+    // Confirm booking
+    printf("\nDo you want to confirm booking? (yes/no): ");
+    scanf("%s", confirmation);
+
+    if (strcmp(confirmation, "yes") == 0)
+    {
+        int paymentMethod;
+        char input[50];
+
+        printf("\nSelect payment method:\n");
+        printf("1. UPI\n2. Debit/Credit Card\n3. Wallet\n");
+        printf("Enter your choice (1-3): ");
+        scanf("%d", &paymentMethod);
+
+        switch (paymentMethod)
+        {
+        case 1:
+            printf("Enter UPI ID: ");
+            scanf("%s", input);
+            break;
+        case 2:
+            printf("Enter Card Number: ");
+            scanf("%s", input);
+            break;
+        case 3:
+            printf("Enter Wallet ID: ");
+            scanf("%s", input);
+            break;
+        default:
+            printf("Invalid payment method! Exiting...\n");
+            return 1;
+        }
+
+        printf("\nProcessing payment of ₹%d...\n", totalCost);
+        printf("Payment successful!\n");
+
+        // Final ticket
+        
+        printf("\n---------------------------------------------------------\n");
+        printf("         **********MOVIE TICKET**********\n");
+        printf("---------------------------------------------------------\n");
+        printf(" Theater       : %s\n", theaterName);
+        printf(" Movie Type    : %s\n", movieType);
+        printf(" Movie Name    : %s\n", movieName);
+        printf(" Date          : %s\n", movieDate);
+        printf(" Show Timing   : %s\n", movieTime);
+        printf(" Tickets       : %d\n", numberOfTickets);
+        printf(" Seats Booked  : ");
+        for (int i = 0; i < seatCount; i++)
+        {
+            printf("%d", selectedSeats[i]);
+            if (i != seatCount - 1)
+                printf(", ");
+        }
+        printf("\n Ticket Price  : ₹%d\n", ticketPrice);
+        printf(" Total Cost    : ₹%d\n", totalCost);
+        printf(" Payment       : Successful\n");
+        printf("---------------------------------------------------------\n");
+        printf("               Enjoy your movie!                         \n");
+        printf("---------------------------------------------------------\n");
+    }
+    else
+    {
+        printf("Booking cancelled.\n");
+    }
+}
